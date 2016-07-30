@@ -2,9 +2,10 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"io"
 	"log"
 	"net"
+	"strings"
 )
 
 func handle(conn net.Conn) {
@@ -13,7 +14,19 @@ func handle(conn net.Conn) {
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		ln := scanner.Text()
-		fmt.Println(ln)
+		// fmt.Println(ln) /*debug line*/
+		fs := strings.Fields(ln)
+		// ensuring that a command is entered
+		if len(fs) < 1 {
+			continue
+		}
+		switch fs[0] {
+		case "GET":
+		case "SET":
+		case "DEL":
+		default:
+			io.WriteString(conn, "INVALID COMMAND "+fs[0]+"\n")
+		}
 	}
 }
 
